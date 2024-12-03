@@ -37,7 +37,7 @@ module adc_processing #(
     ) AVERAGER (
         .reset(reset),
         .clk(clk),
-        .EN(ready_pulse),
+        .EN(ready),
         .Din(data),
         .Q(ave_data)
     );

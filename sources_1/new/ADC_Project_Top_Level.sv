@@ -18,7 +18,6 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module ADC_Project_Top_Level(
         input  logic        clk,
         input  logic        reset,
@@ -30,6 +29,7 @@ module ADC_Project_Top_Level(
         input logic         adc_mode_bt,
         input logic         scaled_mode_bt,
         input logic         display_mode_bt,
+        input logic         algorithm_sel_bt,
         output logic        CA, CB, CC, CD, CE, CF, CG, DP,
         output logic        AN1, AN2, AN3, AN4,
         output logic        pwm_out,
@@ -87,6 +87,7 @@ module ADC_Project_Top_Level(
         .in_mode        (adc_mode_bt), // button select ADC
         .scale_val_in   (scaled_mode_bt), // Averaging mode and change algorithm
         .hex_BCD_in     (display_mode_bt), // selects btw BCD and Hex
+        .ADC_sel_in     (algorithm_sel_bt),// Chooses btw SA and Ramp
         //Interactions with outer modules: For the Bin_to_BCD module
         .switches_in    (switches_in), //[15:0]
         .bin_out        (bin_values), // [15:0]
@@ -133,25 +134,25 @@ module ADC_Project_Top_Level(
     // XADC 
     //============================================================================
     // XADC instantiation
-    xadc_wiz_0 XADC_INST (
-        .di_in      (16'h0000),        // Not used for reading
-        .daddr_in   (CHANNEL_ADDR),    // Channel address
-        .den_in     (xadc_en),         // Enable signal
-        .dwe_in     (1'b0),            // Not writing, so set to 0
-        .drdy_out   (xadc_ready),      // Data ready signal (when high, ADC data is valid)
-        .do_out     (xadc_raw),       // ADC data output
-        .dclk_in    (clk),             // Use system clock
-        .reset_in   (reset),           // Active-high reset
-        .vp_in      (1'b0),            // Not used, leave disconnected
-        .vn_in      (1'b0),            // Not used, leave disconnected
-        .vauxp15    (vauxp15),         // Auxiliary analog input (positive)
-        .vauxn15    (vauxn15),         // Auxiliary analog input (negative)
-        .channel_out(),                // Current channel being converted
-        .eoc_out    ()      ,         // End of conversion
-        .alarm_out  (),                // Not used
-        .eos_out    (eos_out),         // End of sequence
-        .busy_out   (busy_out)         // XADC busy signal
-    );
+    // xadc_wiz_0 XADC_INST (
+    //     .di_in      (16'h0000),        // Not used for reading
+    //     .daddr_in   (CHANNEL_ADDR),    // Channel address
+    //     .den_in     (xadc_en),         // Enable signal
+    //     .dwe_in     (1'b0),            // Not writing, so set to 0
+    //     .drdy_out   (xadc_ready),      // Data ready signal (when high, ADC data is valid)
+    //     .do_out     (xadc_raw),       // ADC data output
+    //     .dclk_in    (clk),             // Use system clock
+    //     .reset_in   (reset),           // Active-high reset
+    //     .vp_in      (1'b0),            // Not used, leave disconnected
+    //     .vn_in      (1'b0),            // Not used, leave disconnected
+    //     .vauxp15    (vauxp15),         // Auxiliary analog input (positive)
+    //     .vauxn15    (vauxn15),         // Auxiliary analog input (negative)
+    //     .channel_out(),                // Current channel being converted
+    //     .eoc_out    ()      ,         // End of conversion
+    //     .alarm_out  (),                // Not used
+    //     .eos_out    (eos_out),         // End of sequence
+    //     .busy_out   (busy_out)         // XADC busy signal
+    // );
 
     // Pulser
     rising_edge XADC_READY_PULSER (

@@ -37,6 +37,7 @@ module ADC_Project_Top_tb();
  
     logic        comp_r2r; // comp_r2r input
     logic        comp_pwm; // comp_r2r input
+    logic        algorithm_sel_bt;
     logic [15:0] switches_in = 16'b0;
     logic         adc_mode_bt = 0;
     logic         scaled_mode_bt = 0;
@@ -45,7 +46,6 @@ module ADC_Project_Top_tb();
 
     //Outputs
     logic CA, CB, CC, CD, CE, CF, CG, DP, AN1, AN2, AN3, AN4;
-    logic [15:0] led;
     logic [7:0] R2R_out;
     logic pwm_out;
     //============================================================================
@@ -68,10 +68,10 @@ module ADC_Project_Top_tb();
         .comp_pwm        (comp_r2r),                              
         .adc_mode_bt     (adc_mode_bt),                           
         .scaled_mode_bt  (scaled_mode_bt),                        
-        .display_mode_bt (display_mode_bt),                       
+        .display_mode_bt (display_mode_bt),
+        .algorithm_sel_bt(algorithm_sel_bt),                      
         .CA(CA), .CB(CB), .CC(CC), .CD(CD), .CE(CE), .CF(CF), .CG(CG), .DP(DP),        
-        .AN1(AN1), .AN2(AN2), .AN3(AN3), .AN4(AN4),                    
-        .led             (led),                                   
+        .AN1(AN1), .AN2(AN2), .AN3(AN3), .AN4(AN4),                                                    
         .pwm_out         (pwm_out),                               
         .R2R_out         (R2R_out)                       
     );                        // not required, i.e. .R2R_out()
@@ -99,14 +99,14 @@ module ADC_Project_Top_tb();
 
         scaled_mode_bt = 0;
 
-        for (int i = 0; i<4; i++ ) begin
-            #(51*MS_1); adc_mode_bt = 1;
-            #(51*MS_1); adc_mode_bt = 0;
+        for (int i = 0; i<3; i++ ) begin
+            #(51*MS_1); algorithm_sel_bt = 1; adc_mode_bt = 1;
+            #(51*MS_1); algorithm_sel_bt = 0; adc_mode_bt = 0;
         end
             
 
         // Loads values
-        for (int i = 0; i<20; i++) begin
+        for (int i = 0; i<280; i++) begin
             // comp_r2r signal
             comp_r2r = 1; //bit 7
             #INDEX_DELAY; // 62.5 us
