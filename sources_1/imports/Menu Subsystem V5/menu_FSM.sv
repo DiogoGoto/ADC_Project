@@ -1,29 +1,40 @@
 
-module menu_FSM    #(
-        parameter int INPUT_TYPES = 3,                   // Bit width for duty_cycle
-        parameter int SCALING_MODES = 3    // System clock frequency in Hz
-    )
+module menu_FSM
     (
     input logic        clk,
     input logic        reset,
+
+    //Debounced Buttons
     input logic        in_mode,
     input logic        scale_val_in,
     input logic        hex_BCD_in,
     input logic        ADC_sel_in,
-    output logic [$clog2(INPUT_TYPES)-1 :0] out_sel,
-    output logic [$clog2(SCALING_MODES)-1:0] scale_sel,
+
+    //Enables
+    output logic pwm_en,
+    output logic r2r_en,
+    output logic sar_en,
+    output logic xadc_en,
+
+    // Selects
+    output logic [1:0] adc_sel,
+    output logic [1:0] scale_sel,
     output logic       hex_BCD_sel,
-    output logic [1:0] ADC_sel,
-    output logic       successive_approx
+    output logic [1:0] mode_sel
+
     );
     
+    //Internal Signals
+    //====================================================================================
+    // Rising Edge pulses
     logic HEX_out;
     logic scale_out;
     logic mode_out;
     logic ADC_sel_out;
+    //====================================================================================
     
-    
-    //Impliment Button transition detectors for Menu
+    // Rising Edge Detector 
+    //====================================================================================
     Button_Transition_Detector b1 (
         .reset(reset),
         .clk(clk),
@@ -51,12 +62,53 @@ module menu_FSM    #(
         .sig_in(ADC_sel_in),
         .sig_out(ADC_sel_out)
     );
-    
+    //====================================================================================
+
+    // FMS
+    //====================================================================================
+    // ADC Select
+    adc_sel_FMS ADC_SEL_FSM (
+        .clk        (clk),
+        .reset      (reset),
+        .adc_bt     (ADC_sel_out),
+        .adc_sel    (adc_sel),
+        .pwm_en     (pwm_en),
+        .r2r_en     (r2r_en),
+        .sar_en     (sar_en),
+        .xadc_en    (xadc_en)
+    );
+
+    // Scale Select
+    scaled_FSM SCALE_SEL_FSM (
+        .clk        (clk),
+        .reset      (reset),
+        .scale_bt   (scale_out),
+        .scale_sel  (scale_sel)
+    );
+
+    //Bin to BCD Select
+    bin_BCD_FSM BIN_BCD_SEL_FSM (
+        .clk        (clk),
+        .reset      (reset),
+        .bin_bcd_bt (HEX_out),
+        .hex_bcd_sel(hex_BCD_sel)
+    );
+
+    // Mode Select
+    mode_FSM MODE_SEL_FSM (
+        .clk        (clk),
+        .reset      (reset),
+        .mode_bt    (mode_out),
+        .mode_sel   (mode_sel)
+    );
+    //====================================================================================
+
+/*
     always_ff @ (posedge clk) begin //Counter 1: Input select (All zeros, Switches, ADC's)    
         if (reset)
             out_sel <= 'b0;
         else if (mode_out == 1) begin
-            if(out_sel < INPUT_TYPES - 1)
+            if(out_sel < 2)
                 out_sel <= out_sel + 1;
             else
                 out_sel <= 0;
@@ -77,9 +129,9 @@ module menu_FSM    #(
             
         else if (scale_out == 1)
         
-            if(scale_sel < SCALING_MODES - 1) scale_sel <= scale_sel + 1;
+            if(scale_sel < 2) scale_sel <= scale_sel + 1;
             else scale_sel <= 0;
-            
+        else scale_sel <= scale_sel;
    end
    
    //Modification: This changes how to switch the ADC modality, so we need a good way to select ADC's and the Successive approximation
@@ -104,20 +156,20 @@ module menu_FSM    #(
         endcase
    //Output logic for successive approx
    always_comb
-        if (state == S2) successive_approx = 1;
-        else if (state == S4) successive_approx = 1;
+        if (state == S1) successive_approx = 1;
+        else if (state == S3) successive_approx = 1;
         else successive_approx = 0;
         
    //Output logic for ADC sel
       always_comb
         case(state)
             S0: ADC_sel = 0;
-            S1: ADC_sel = 1;
+            S1: ADC_sel = 0;
             S2: ADC_sel = 1;
-            S3: ADC_sel = 2;
+            S3: ADC_sel = 1;
             S4: ADC_sel = 2;
             default: ADC_sel = 0;
         endcase
    
-   
+*/  
 endmodule

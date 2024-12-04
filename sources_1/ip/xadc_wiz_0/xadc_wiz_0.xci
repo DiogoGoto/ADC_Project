@@ -4,7 +4,7 @@
     "xci_name": "xadc_wiz_0",
     "component_reference": "xilinx.com:ip:xadc_wiz:3.3",
     "ip_revision": "10",
-    "gen_directory": "../../../../Lab_7.gen/sources_1/ip/xadc_wiz_0",
+    "gen_directory": "../../../../OLD_ADC.gen/sources_1/ip/xadc_wiz_0",
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "xadc_wiz_0", "resolve_type": "user", "usage": "all" } ],
@@ -266,7 +266,7 @@
         "IPCONTEXT": [ { "value": "IP_Flow" } ],
         "IPREVISION": [ { "value": "10" } ],
         "MANAGED": [ { "value": "TRUE" } ],
-        "OUTPUTDIR": [ { "value": "../../../../Lab_7.gen/sources_1/ip/xadc_wiz_0" } ],
+        "OUTPUTDIR": [ { "value": "../../../../OLD_ADC.gen/sources_1/ip/xadc_wiz_0" } ],
         "SELECTEDSIMMODEL": [ { "value": "" } ],
         "SHAREDDIR": [ { "value": "." } ],
         "SWVERSION": [ { "value": "2024.1" } ],
