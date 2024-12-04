@@ -27,7 +27,7 @@ module Menu_Subsystem(
     output logic XADC_EN, R2R_EN, PWM_EN
 );
     //Initialize intermediate signals
-    logic [2:0] out_sel;
+    logic [1:0] out_sel;
     logic [1:0] scale_sel;
     logic hex_BCD_sel;
     logic [1:0] ADC_sel;

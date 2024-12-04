@@ -54,7 +54,7 @@ module menu_FSM    #(
     
     always_ff @ (posedge clk) begin //Counter 1: Input select (All zeros, Switches, ADC's)    
         if (reset)
-            out_sel <= 0;
+            out_sel <= 'b0;
         else if (mode_out == 1) begin
             if(out_sel < INPUT_TYPES - 1)
                 out_sel <= out_sel + 1;

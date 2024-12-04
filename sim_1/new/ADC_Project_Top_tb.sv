@@ -37,7 +37,7 @@ module ADC_Project_Top_tb();
  
     logic        comp_r2r; // comp_r2r input
     logic        comp_pwm; // comp_r2r input
-    logic        algorithm_sel_bt;
+    logic        algorithm_sel_bt = 0;
     logic [15:0] switches_in = 16'b0;
     logic         adc_mode_bt = 0;
     logic         scaled_mode_bt = 0;
@@ -93,15 +93,17 @@ module ADC_Project_Top_tb();
         // setup
         #100;
         comp_r2r = 0 ;
-        scaled_mode_bt = 1; // Enables Successive approximations 
+        adc_mode_bt = 1; // Enables Successive approximations 
 
         #(51*MS_1);
 
-        scaled_mode_bt = 0;
+        adc_mode_bt = 0;
 
         for (int i = 0; i<3; i++ ) begin
-            #(51*MS_1); algorithm_sel_bt = 1; adc_mode_bt = 1;
-            #(51*MS_1); algorithm_sel_bt = 0; adc_mode_bt = 0;
+            #(51*MS_1); algorithm_sel_bt = ~algorithm_sel_bt;
+            if(i>1)begin
+                adc_mode_bt = ~adc_mode_bt;
+            end
         end
             
 

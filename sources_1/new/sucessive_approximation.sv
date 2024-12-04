@@ -23,7 +23,7 @@
 module sucessive_approximation #(
     parameter int WIDTH = 8,                   // Bit width for duty_cycle
     parameter int CLOCK_FREQ = 100_000_000,               // Clock frequency (in Hz)
-    parameter int SAMPLING_FREQ = 2_000                 // Period of the clock (in us)
+    parameter int SAMPLING_FREQ = 2_000                // Period of the clock (in us)
 )
 
     (
